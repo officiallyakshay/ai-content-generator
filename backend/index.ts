@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const PORT = 9101;
-const OPENAI_API_KEY = import.meta.env.OPENAI_API_KEY;
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
 app.get("/", (req, res) => {
   console.log("hey im in / path");

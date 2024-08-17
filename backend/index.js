@@ -1,32 +1,18 @@
-"use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const body_parser_1 = __importDefault(require("body-parser"));
-const cors_1 = __importDefault(require("cors"));
-const axios_1 = __importDefault(require("axios"));
-const app = (0, express_1.default)();
-app.use(body_parser_1.default.json());
-app.use((0, cors_1.default)());
+import express from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
+import axios from "axios";
+const app = express();
+app.use(bodyParser.json());
+app.use(cors());
 const PORT = 9101;
-const OPENAI_API_KEY = "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";
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 app.get("/", (req, res) => {
     console.log("hey im in / path");
     console.log("req.body", req.body);
     res.send("API is working");
 });
-app.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/", async (req, res) => {
     const { platform, idea } = req.body;
     console.log("idea: ", idea, "platform: ", platform);
     if (!platform || !idea) {
@@ -35,7 +21,7 @@ app.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // console.log("platform", platform, "idea", idea);
     // res.status(200).json({ platform, idea });
     try {
-        const response = yield axios_1.default.post("https://api.openai.com/v1/chat/completions", {
+        const response = await axios.post("https://api.openai.com/v1/chat/completions", {
             model: "gpt-3.5-turbo",
             messages: [
                 {
@@ -61,7 +47,7 @@ app.post("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         console.error("Error fetching from OpenAI: ", error);
         res.status(500).json({ error: "Error fetch from OpenAI" });
     }
-}));
+});
 app.listen(PORT, () => {
     console.log(`Listening on port: `, PORT);
 });

@@ -18,8 +18,8 @@ app.post("/", async (req, res) => {
     if (!platform || !idea) {
         res.status(400).json({ error: "Platform and Idea are required." });
     }
-    // console.log("platform", platform, "idea", idea);
-    // res.status(200).json({ platform, idea });
+    console.log("platform", platform, "idea", idea);
+    res.status(200).json({ platform, idea });
     try {
         const response = await axios.post("https://api.openai.com/v1/chat/completions", {
             model: "gpt-3.5-turbo",
